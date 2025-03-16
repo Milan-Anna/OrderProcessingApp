@@ -1,36 +1,28 @@
-name: ASP.NET MVC Build and Test (with .NET Framework)
+name: .NET Build and Test
 
 on:
   push:
     branches:
-      - master  # Trigger this workflow when code is pushed to the master branch.
-  pull_request:
-    branches:
-      - master  # Trigger this workflow when a pull request is created for master.
+      - master
 
 jobs:
   build:
-    runs-on: windows-latest  # Use a Windows environment to run the build.
+    runs-on: windows-latest
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2  # Checks out the code from the repository.
+      uses: actions/checkout@v2
 
-    - name: Set up .NET Framework
-      uses: microsoft/setup-msbuild@v1  # Sets up MSBuild environment for .NET Framework projects.
+    - name: Set up MSBuild
+      uses: microsoft/setup-msbuild@v1
       with:
-        msbuild-version: 'latest'  # You can specify the MSBuild version here.
+        vs-version: 'latest' # Use latest or specify a version like '16.9'
 
-    - name: Install NuGet
-      run: |
-        Invoke-WebRequest -Uri https://dist.nuget.org/win-x86-commandline/latest/nuget.exe -OutFile nuget.exe
-        ./nuget.exe restore OrderProcessingApp.sln  # Restore NuGet packages for your solution file.
+    - name: Restore dependencies
+      run: msbuild /t:restore
 
-    - name: Build the application
-      run: |
-        msbuild OrderProcessingApp.sln /p:Configuration=Release  # Build the solution using MSBuild.
+    - name: Build with MSBuild
+      run: msbuild /t:build
 
     - name: Run tests
-      run: |
-        # Run unit tests using the MSTest framework (or your preferred testing framework).
-        vstest.console.exe "path\to\your\test\project\bin\Release\yourtestproject.dll"
+      run: msbuild /t:test
