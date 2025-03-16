@@ -1,0 +1,47 @@
+﻿@using OrderProcessingApp.Models
+@model OrderProcessingApp.Models.Order
+
+@{
+    ViewBag.Title = "Order Entry";
+}
+
+<h2>Order Entry</h2>
+
+@using (Html.BeginForm("ProcessOrder", "Order", FormMethod.Post))
+{
+    <!-- Display Error Message if Invalid Input -->
+    if (ViewBag.ErrorMessage != null)
+    {
+        <div class="alert alert-danger">
+            @ViewBag.ErrorMessage
+        </div>
+    }
+    @Html.LabelFor(model => model.OrderAmount)
+    <!-- If TempData has the Order data, populate the model from TempData -->
+    if (TempData["OrderData"] != null)
+    {
+
+        var tempOrder = TempData["OrderData"] as OrderProcessingApp.Models.Order;
+        if (tempOrder != null)
+        {
+            @Html.TextBoxFor(model => model.OrderAmount, new { @class = "form-control", value = tempOrder.OrderAmount })
+            @Html.DropDownListFor(model => model.CustomerType, new List<SelectListItem>
+            {
+                new SelectListItem { Text = "New", Value = "New", Selected = tempOrder.CustomerType == "New" },
+                new SelectListItem { Text = "Loyal", Value = "Loyal", Selected = tempOrder.CustomerType == "Loyal" }
+            }, "Select Customer Type", new { @class = "form-control" })
+        }
+    }
+    else
+    {
+
+        @Html.TextBoxFor(model => model.OrderAmount, new { @class = "form-control" })
+        @Html.DropDownListFor(model => model.CustomerType, new List<SelectListItem>
+        {
+            new SelectListItem { Text = "New", Value = "New" },
+            new SelectListItem { Text = "Loyal", Value = "Loyal" }
+        }, "Select Customer Type", new { @class = "form-control" })
+    }
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+}

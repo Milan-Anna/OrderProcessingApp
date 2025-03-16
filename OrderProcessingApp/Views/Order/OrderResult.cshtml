@@ -1,0 +1,22 @@
+﻿@model OrderProcessingApp.Models.Order
+
+@{
+    ViewBag.Title = "Order Result";
+}
+
+<h2>Order Result</h2>
+
+<div>
+    <strong>Order Amount: </strong> @Model.OrderAmount
+</div>
+<div>
+    <strong>Customer Type: </strong> @Model.CustomerType
+</div>
+<div>
+    <strong>Discount: </strong> @Model.Discount
+</div>
+<div>
+    <strong>Final Amount: </strong> @Model.TotalAmount
+</div>
+
+
